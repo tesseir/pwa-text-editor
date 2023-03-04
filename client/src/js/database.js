@@ -17,16 +17,16 @@ const initdb = async () =>
 */
 export const putDb = async (content) => {
   // First, create a variable, and set it to asyncronously await the opening of the database. Replace the items in all caps
-  const DB_VAR = await openDB('DB_NAME', 1);
+  const DB_VAR = await openDB('jate', 1);
 
   // Now create a variable for the transaction
-  const TX_VAR = jateDb.transaction('DB_NAME', 'readwrite');
+  const TX_VAR = jateDb.transaction('jate', 'readwrite');
 
   // Now create a variable for the store
-  const STORE_VAR = tx.objectStore('DB_NAME');
+  const STORE_VAR = tx.objectStore('jate');
 
   // Now create a variable named "request" and have it perform the update
-  const VAR_NAME = store.put({ id: 1, value: content });
+  const request = STORE_VAR({ id: 1, value: content });
 
   const result = await request;
   console.log('🚀 - data saved to the database', result.value);
@@ -36,12 +36,13 @@ export const putDb = async (content) => {
   We need to add some code below which will get all content from IndexedDB.
 */
 export const getDb = async () => {
-  // You can duplicate the same first lines of code from above, except that the transaction will be 'readonly'
-  
-  // LINES 1-3 HERE
+  const DB_VAR = await openDB("jate", 1);
 
-  // Leave the rest as-is
-  const request = store.get(1);
+  const TX_VAR = DB_VAR.transaction("jate", "readwrite");
+
+  const STORE_VAR = TX_VAR.objectStore("jate");
+
+  const request = STORE_VAR.get(1);
   const result = await request;
   result
     ? console.log('🚀 - data retrieved from the database', result.value)
